@@ -1,35 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-
-
-
-@foreach ($accounts as $account)
-
-    {{ var_dump($account->card) }}<br>
-
-@endforeach
-
-
-<form method="POST" action="{{ route('accounts.index') }}">
-    @csrf
-    <fieldset>
-        <legend>Payment</legend>
-        <div>
-            <label for="credit-card">Credit card</label>
-            <input id="credit-card" name="card" type="text" autocomplete="off" />
-            <button type="submit">aha</button>
-        </div>
-    </fieldset>
-</form>
-
-<script>
     input_credit_card = function(input)
 {
     var format_and_pos = function(char, backspace)
@@ -63,7 +31,7 @@
         var gi = 0; // group index
         var newV = "";
         var groups = /^\D*3[47]/.test(value) ? // check for American Express
-        [4, 6, 5] : [4, 4, 4, 4];
+        [4, 6, 5] : [2, 4, 4, 4, 4, 4, 4];
 
         for (var i = 0; i < value.length; i++)
         {
@@ -116,40 +84,13 @@
 
             if (/\D/.test(char) || (this.selectionStart === this.selectionEnd &&
             this.value.replace(/\D/g, '').length >=
-            (/^\D*3[47]/.test(this.value) ? 15 : 16))) // 15 digits if Amex
+            (/^\D*3[47]/.test(this.value) ? 25 : 26))) // 15 digits if Amex
             {
                 return false;
             }
             format_and_pos(char);
         }
     });
-
-    // backspace doesn't fire the keypress event
-    input.addEventListener('keydown', function(e)
-    {
-        if (e.keyCode === 8 || e.keyCode === 46) // backspace or delete
-        {
-            e.preventDefault();
-            format_and_pos('', this.selectionStart === this.selectionEnd);
-        }
-    });
-
-    input.addEventListener('paste', function()
-    {
-        // A timeout is needed to get the new value pasted
-        setTimeout(function(){ format_and_pos(''); }, 50);
-    });
-
-    input.addEventListener('blur', function()
-    {
-    	// reformat onblur just in case (optional)
-        format_and_pos(this, false);
-    });
 };
 
-input_credit_card(document.getElementById('credit-card'));
-</script>
-
-
-</body>
-</html>
+input_credit_card(document.getElementById('card'));

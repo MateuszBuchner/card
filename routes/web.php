@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 
-Route::get('/accounts', [AccountsController::class, 'index'])->name('accounts.index');
-Route::post('/accounts', [AccountsController::class, 'store'])->name('accounts.index');
+Route::post('/', [AccountsController::class, 'store']);
+
+Route::resource('/', AccountsController::class)->only([
+    'index', 'store'
+]);

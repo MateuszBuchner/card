@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreAccountRequest;
+use Symfony\Component\VarDumper\VarDumper;
 
 class AccountsController extends Controller
 {
@@ -12,10 +14,11 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($numb=null )
     {
-        return view('accounts.index', [
-            'accounts' => Account::all()
+        return view('index', [
+            'accounts' => Account::all(),
+            'numb'  => $numb
         ]);
     }
 
@@ -35,12 +38,13 @@ class AccountsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAccountRequest $request)
     {
-        $account = new Account($request->all());
+        $account = new Account($request->validated());
+        $spaceNumber = $account->card;
         $account->card = str_replace(' ','',$account->card);
         $account->save();
-        return redirect('accounts');
+        return $this->index()->with(["numb" => $spaceNumber]);
     }
 
     /**

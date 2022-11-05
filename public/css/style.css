@@ -1,0 +1,22 @@
+#card{
+    width: 350px;
+}
+#box{
+    widows: 350px;
+    height: 250px;
+    background-color: rgb(92, 92, 92);
+}
+.container1{
+    display: flex;
+    justify-content: center;
+}
+.container2{
+    display: flex;
+    justify-content: center;
+}
+.table{
+    width: 0;
+}
+.btn{
+    margin-top: 1vh;
+}
