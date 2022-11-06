@@ -44,14 +44,15 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
+                <span class="valiIban">{{ $ibanViolation }}</span><br>
                 <button type="submit" class="btn btn-primary">Wyślij</button>
             </div>
-            Nr konta: {{ $numb }}
+            Nr konta: {{ $numb }}<br>
+
         </fieldset>
     </form>
 </div>
 
-<script src="{{ asset('js/script.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 
 

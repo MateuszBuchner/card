@@ -6,7 +6,8 @@ use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreAccountRequest;
 use Symfony\Component\VarDumper\VarDumper;
-
+use Iban\Validation\Validator;
+use Iban\Validation\Iban;
 class AccountsController extends Controller
 {
     /**
@@ -14,11 +15,12 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($numb=null )
+    public function index($numb=null , $ibanViolation=null)
     {
         return view('index', [
             'accounts' => Account::all(),
-            'numb'  => $numb
+            'numb'  => $numb,
+            'ibanViolation' => $ibanViolation
         ]);
     }
 
@@ -38,13 +40,34 @@ class AccountsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAccountRequest $request)
+    public function store(Request $request)
     {
-        $account = new Account($request->validated());
+        $account = new Account($request->all());
         $spaceNumber = $account->card;
-        $account->card = str_replace(' ','',$account->card);
-        $account->save();
-        return $this->index()->with(["numb" => $spaceNumber]);
+
+        $iban = new Iban($spaceNumber);
+        $validator = new Validator();
+
+        if (!$validator->validate($iban)) {
+            foreach ($validator->getViolations() as $violation) {
+            }
+        } else {
+            echo "Prawidłowy numer konta";
+            $account->card = str_replace(' ','',$account->card);
+            $account->save();
+            $violation = null;
+        }
+
+        $format_iban = null;
+
+        if (strlen($iban) >= 28)
+        {
+            $format_iban =
+            substr($iban, -34, -32) . " " .
+            substr($iban, -32) . " ";
+        }
+
+        return $this->index()->with(["numb" => $format_iban, "ibanViolation" => $violation]);
     }
 
     /**
